@@ -13,6 +13,7 @@ import org.gradle.api.tasks.TaskAction;
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -40,13 +41,14 @@ public class DuplicateClassTask extends DefaultTask {
 
     @TaskAction
     public void examine() {
-        System.out.println("Duplicate check task executed");
+        System.out.println("Duplicate check task executing...");
         Map<String, File> dependenciesMap = new HashMap<>();
         project.getConfigurations().forEach(configuration -> {
             if (configuration.isCanBeResolved()) {
                 Set<ResolvedArtifact> resolvedArtifacts = configuration.getResolvedConfiguration().getResolvedArtifacts();
                 Map<String, File> collect = resolvedArtifacts.stream()
-                        .collect(Collectors.toMap(ResolvedArtifact::getName, ResolvedArtifact::getFile));
+                        .map(Tuple::fromResolvedArtifact)
+                        .collect(Collectors.toMap(Tuple::getT1, Tuple::getT2));
                 dependenciesMap.putAll(collect);
             }
         });
@@ -60,13 +62,17 @@ public class DuplicateClassTask extends DefaultTask {
         }
 
         Report report = generateReport(dependenciesMap);
-        report.print(System.out);
+        report.print(new PrintWriter(System.out));
+        report.write(outputFile);
+        System.out.println("Duplicate check task completed...");
     }
 
     private Report generateReport(Map<String, File> dependency) {
         Map<String, Set<String>> interMediate = new HashMap<>();
         dependency.forEach((name, file) -> {
-            if (file.isDirectory()) {
+            if (!file.exists()) {
+                System.err.println("File not found: " + file);
+            } else if (file.isDirectory()) {
                 try {
                     Files.walkFileTree(file.toPath(), new SimpleFileVisitor<>() {
                         @Override
@@ -76,7 +82,7 @@ public class DuplicateClassTask extends DefaultTask {
                         }
                     });
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    System.err.println("Error reading directory: " + file.getName());
                 }
             } else {
                 try (JarFile jarFile = new JarFile(file);) {
