@@ -17,12 +17,6 @@ gradlePlugin {
 }
 
 publishing {
-    publications {
-        create<MavenPublication>("gpr") {
-            from(components["java"])
-        }
-    }
-
     repositories {
         maven {
             name = "GitHubPackages"
