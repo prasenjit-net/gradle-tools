@@ -1,7 +1,7 @@
 # A script to test the gradle project running the test task on each commit on all branches.
 #
 
-name: Gradle Test
+name: Gradle Pull Request
 
 on:
   pull_request:
