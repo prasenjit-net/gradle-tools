@@ -33,8 +33,14 @@ jobs:
         - name: Run tests with Gradle
           run: ./gradlew test
 
-        - name: Upload test results
-          uses: actions/upload-artifact@v2
+        - name: Upload build logs
+          uses: actions/upload-artifact@v4
           with:
-              name: test-results
-              path: "**/build/test-results"
+              name: build-logs
+              path: "**/build/reports"
+
+        - name: Publish to GitHub Packages
+          run: ./gradlew publish -x test
+          env:
+            USERNAME: ${{ github.actor }}
+            TOKEN: ${{ secrets.GITHUB_TOKEN }}
