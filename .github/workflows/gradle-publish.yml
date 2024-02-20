@@ -5,11 +5,13 @@
 # This workflow will build a package using Gradle and then publish it to GitHub packages when a release is created
 # For more information see: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#Publishing-using-gradle
 
-name: Gradle Package
+name: Gradle Release Package
 
+# run on tags created
 on:
-  release:
-    types: [created]
+  push:
+    tags:
+      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
 jobs:
   build:
@@ -39,7 +41,7 @@ jobs:
     - name: Upload build logs
       uses: actions/upload-artifact@v4
       with:
-        name: build-logs
+        name: reports
         path: "**/build/reports"
 
     - name: Publish to GitHub Packages
