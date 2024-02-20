@@ -31,7 +31,7 @@ jobs:
         - name: Grant execute permission for gradlew
           run: chmod +x gradlew
         - name: Run tests with Gradle
-          run: ./gradlew test
+          run: ./gradlew test --scan
 
         - name: Upload build logs
           uses: actions/upload-artifact@v4
@@ -40,7 +40,7 @@ jobs:
               path: "**/build/reports"
 
         - name: Publish to GitHub Packages
-          run: ./gradlew build publish -x test
+          run: ./gradlew build publish -x test --scan
           env:
             USERNAME: ${{ github.actor }}
             TOKEN: ${{ secrets.GITHUB_TOKEN }}
