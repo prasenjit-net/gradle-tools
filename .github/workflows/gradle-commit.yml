@@ -40,7 +40,7 @@ jobs:
               path: "**/build/reports"
 
         - name: Publish to GitHub Packages
-          run: ./gradlew publish -x test
+          run: ./gradlew build publish -x test
           env:
             USERNAME: ${{ github.actor }}
             TOKEN: ${{ secrets.GITHUB_TOKEN }}
