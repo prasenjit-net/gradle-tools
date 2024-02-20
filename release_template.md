@@ -1,6 +1,6 @@
-# Release of Version $version$
+# Release of Version VERSION
 
-This is a release of version $version$.
+This is a release of version VERSION.
 
 ## Usages
 
@@ -8,7 +8,7 @@ To use the plugin of this version, you can add the following plugin to your grad
 
 ```groovy
 plugins {
-  id "net.prasenjit.tools.duplicateClass" version "$version$"
+  id "net.prasenjit.tools.duplicateClass" version "VERSION"
 }
 ```
 
@@ -16,6 +16,6 @@ for Kotlin DSL
 
 ```kotlin
 plugins {
-  id("net.prasenjit.tools.duplicateClass") version "$version$"
+  id("net.prasenjit.tools.duplicateClass") version "VERSION"
 }
 ```

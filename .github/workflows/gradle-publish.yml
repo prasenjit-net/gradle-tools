@@ -56,7 +56,7 @@ jobs:
         version=$(echo ${{ github.ref }} | cut -c 2-) # remove the v from the tag
         
         # replace the version in the release_template.md
-        sed -i "s/$version$/${version}/g" release_template.md
+        sed -i "s/VERSION/${version}/g" release_template.md
       shell: bash
 
     - name: Create Release
