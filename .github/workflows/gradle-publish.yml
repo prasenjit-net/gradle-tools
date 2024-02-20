@@ -53,10 +53,10 @@ jobs:
     - name: Replace version in release_template.md
       run: |
         # find the version in github.ref and replace it in the release_template.md
-        version=$(echo ${{ github.ref }} | cut -c 2-) # remove the v from the tag
+        version=$(echo ${{ github.ref }} | cut -c 12-) # remove the v from the tag
         
         # replace the version in the release_template.md
-        sed -i '' "s/VERSION/${version}/g" release_template.md
+        sed -i '' "s/VERSION/${version}.${{GITHUB_RUN_NUMBER}}/g" release_template.md
       shell: bash
 
     - name: Create Release
