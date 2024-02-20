@@ -10,6 +10,22 @@ plugins {
 
 subprojects {
     group = "net.prasenjit.tools.gradle"
-    version = "0.0.1"
+    val projectVersion: String by project
+
+    val githubRef = System.getenv("GITHUB_REF")
+    val buildRunNumber = System.getenv("GITHUB_RUN_NUMBER")
+    val isRelease = githubRef?.startsWith("refs/tags/") ?: false
+    val isSnapshot = githubRef?.startsWith("refs/heads/") ?: false
+
+    if (isRelease) {
+        val tagVersion = githubRef?.removePrefix("refs/tags/")?.removePrefix("v")
+        version = "$tagVersion.$buildRunNumber"
+    } else if (isSnapshot) {
+        version = "$projectVersion.$buildRunNumber-SNAPSHOT"
+    } else {
+        version = "$projectVersion-SNAPSHOT"
+    }
+
+    println("Project version: $version")
 }
 
