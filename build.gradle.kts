@@ -6,10 +6,10 @@
  */
 
 plugins {
-
 }
 
 subprojects {
     group = "net.prasenjit.tools.gradle"
     version = "0.0.1"
 }
+
