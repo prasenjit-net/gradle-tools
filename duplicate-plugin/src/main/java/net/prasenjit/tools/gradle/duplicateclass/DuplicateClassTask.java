@@ -29,12 +29,15 @@ import java.util.stream.Collectors;
 public class DuplicateClassTask extends DefaultTask {
 
     private final Project project;
+    private final DuplicateClassExtension duplicateClassExtension;
+    AntPathMatcher matcher = new AntPathMatcher();
     @OutputFile
     private File outputFile;
 
     @Inject
-    public DuplicateClassTask(Project project) {
+    public DuplicateClassTask(Project project, DuplicateClassExtension extension) {
         this.project = project;
+        this.duplicateClassExtension = extension;
         Provider<RegularFile> provider = project.getLayout().getBuildDirectory().file("dependency-report.txt");
         outputFile = provider.map(RegularFile::getAsFile).get();
     }
@@ -102,6 +105,9 @@ public class DuplicateClassTask extends DefaultTask {
     }
 
     private void pushEntry(Map<String, Set<String>> interMediate, String classFile, String name) {
+        if (duplicateClassExtension.getExcludes().get().stream().anyMatch(e -> matcher.match(e, classFile))) {
+            return;
+        }
         interMediate.computeIfAbsent(classFile, e -> new HashSet<>()).add(name);
     }
 

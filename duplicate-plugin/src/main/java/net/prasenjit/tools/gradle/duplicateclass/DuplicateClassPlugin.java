@@ -7,9 +7,9 @@ import org.jetbrains.annotations.NotNull;
 
 public class DuplicateClassPlugin implements Plugin<Project> {
     public static final String PLUGIN_ID = "net.prasenjit.tools.duplicateClass";
-    private static void registerDuplicateCheckTask(@NotNull Project project) {
+    private static void registerDuplicateCheckTask(@NotNull Project project, DuplicateClassExtension extension) {
         DuplicateClassTask checkDependency = project.getTasks()
-                .create("checkDuplicateClass", DuplicateClassTask.class, project);
+                .create("checkDuplicateClass", DuplicateClassTask.class, project, extension);
         checkDependency.mustRunAfter(JavaPlugin.CLASSES_TASK_NAME);
         project.getTasks().getByName("check").dependsOn(checkDependency);
     }
@@ -20,7 +20,7 @@ public class DuplicateClassPlugin implements Plugin<Project> {
             DuplicateClassExtension extension = project.getExtensions()
                     .create("duplicateCheck", DuplicateClassExtension.class);
             if (extension.getEnabled().get()) {
-                registerDuplicateCheckTask(project);
+                registerDuplicateCheckTask(project, extension);
             }
         }
     }
